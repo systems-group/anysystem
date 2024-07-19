@@ -1,6 +1,8 @@
+use std::rc::Rc;
+
 use anysystem::context::Context;
 use anysystem::message::Message;
-use anysystem::process::Process;
+use anysystem::process::{Process, ProcessState};
 
 #[derive(Clone)]
 pub struct RetryPingClient {
@@ -41,6 +43,16 @@ impl Process for RetryPingClient {
             ctx.send(self.ping.as_ref().unwrap().clone(), self.server.clone());
             ctx.set_timer("check-pong", 3.);
         }
+        Ok(())
+    }
+
+    fn state(&self) -> Result<Rc<dyn ProcessState>, String> {
+        Ok(Rc::new(self.ping.clone()))
+    }
+
+    fn set_state(&mut self, state: Rc<dyn ProcessState>) -> Result<(), String> {
+        self.ping
+            .clone_from(state.downcast_rc::<Option<Message>>().unwrap().as_ref());
         Ok(())
     }
 }
