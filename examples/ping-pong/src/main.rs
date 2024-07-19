@@ -52,7 +52,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
     if args.impl_path.ends_with(".py") {
-        env::set_var("PYTHONPATH", "../../crates/anysystem-py/python");
+        env::set_var("PYTHONPATH", "../../anysystem-py/python");
     }
     init_logger(LevelFilter::Debug);
     let config = TestConfig {

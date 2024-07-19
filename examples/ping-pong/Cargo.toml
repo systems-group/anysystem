@@ -5,8 +5,8 @@ license = "MIT OR Apache-2.0"
 edition = "2021"
 
 [dependencies]
-anysystem = { path = "../../crates/anysystem" }
-anysystem-py = { path = "../../crates/anysystem-py" }
+anysystem = { path = "../../anysystem" }
+anysystem-py = { path = "../../anysystem-py" }
 assertables = "3.2.2"
 clap = { version = "3.1.17", features = ["cargo", "derive"] }
 env_logger = "0.9.0"
