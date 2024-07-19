@@ -54,4 +54,4 @@ jobs:
           components: clippy
       - uses: Swatinem/rust-cache@v2
       - name: Run tests
-        run: cargo test --doc --workspace
+        run: cargo test --workspace
