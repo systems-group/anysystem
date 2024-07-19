@@ -27,6 +27,70 @@ use crate::basic::server::BasicPingServer;
 use crate::retry::client::RetryPingClient;
 use crate::retry::server::RetryPingServer;
 
+// CLI -----------------------------------------------------------------------------------------------------------------
+
+/// Ping-Pong Tests
+#[derive(Parser, Debug)]
+#[clap(about, long_about = None)]
+struct Args {
+    /// Path to Python file with PingClient and PingServer implementations
+    /// or name of Rust implementation (basic or retry)
+    #[clap(long = "impl", short)]
+    impl_path: String,
+
+    /// Test to run (optional)
+    #[clap(long = "test", short)]
+    test: Option<String>,
+
+    /// Random seed used in tests
+    #[clap(long, short, default_value = "123")]
+    seed: u64,
+}
+
+// MAIN ----------------------------------------------------------------------------------------------------------------
+
+fn main() {
+    let args = Args::parse();
+    if args.impl_path.ends_with(".py") {
+        env::set_var("PYTHONPATH", "../../crates/anysystem-py/python");
+    }
+    init_logger(LevelFilter::Debug);
+    let config = TestConfig {
+        impl_path: args.impl_path,
+        seed: args.seed,
+    };
+
+    let mut tests = TestSuite::new();
+    tests.add("RUN", test_run, config.clone());
+    tests.add("RESULT", test_result, config.clone());
+    tests.add("RESULT UNRELIABLE", test_result_unreliable, config.clone());
+    tests.add("10 RESULTS UNRELIABLE", test_10_results_unreliable, config.clone());
+    tests.add("DROP PING", test_drop_ping, config.clone());
+    tests.add("DROP PONG", test_drop_pong, config.clone());
+    tests.add("DROP PING 2", test_drop_ping_2, config.clone());
+    tests.add("DROP PONG 2", test_drop_pong_2, config.clone());
+    tests.add("10 UNIQUE RESULTS", test_10_unique_results, config.clone());
+    tests.add(
+        "10 UNIQUE RESULTS UNRELIABLE",
+        test_10_unique_results_unreliable,
+        config.clone(),
+    );
+    tests.add("MC RELIABLE NETWORK", test_mc_reliable_network, config.clone());
+    tests.add("MC UNRELIABLE NETWORK", test_mc_unreliable_network, config.clone());
+    tests.add(
+        "MC LIMITED MESSAGE DROPS",
+        test_mc_limited_message_drops,
+        config.clone(),
+    );
+    tests.add("MC CONSECUTIVE MESSAGES", test_mc_consecutive_messages, config);
+
+    if args.test.is_none() {
+        tests.run();
+    } else {
+        tests.run_test(&args.test.unwrap().to_uppercase().replace('_', " "));
+    }
+}
+
 // UTILS ---------------------------------------------------------------------------------------------------------------
 
 #[derive(Clone)]
@@ -104,7 +168,7 @@ fn test_result_unreliable(config: &TestConfig) -> TestResult {
     check(sys.read_local_messages("client"), data)
 }
 
-fn test_10results_unreliable(config: &TestConfig) -> TestResult {
+fn test_10_results_unreliable(config: &TestConfig) -> TestResult {
     let mut sys = build_system(config);
     sys.network().set_drop_rate(0.5);
     let data = r#"{"value": "Hello!"}"#;
@@ -138,7 +202,7 @@ fn test_drop_pong(config: &TestConfig) -> TestResult {
     check(sys.read_local_messages("client"), data)
 }
 
-fn test_drop_ping2(config: &TestConfig) -> TestResult {
+fn test_drop_ping_2(config: &TestConfig) -> TestResult {
     let mut sys = build_system(config);
     sys.network().drop_outgoing("client-node");
     let data = r#"{"value": "Hello!"}"#;
@@ -149,7 +213,7 @@ fn test_drop_ping2(config: &TestConfig) -> TestResult {
     check(sys.read_local_messages("client"), data)
 }
 
-fn test_drop_pong2(config: &TestConfig) -> TestResult {
+fn test_drop_pong_2(config: &TestConfig) -> TestResult {
     let mut sys = build_system(config);
     sys.network().drop_outgoing("server-node");
     let data = r#"{"value": "Hello!"}"#;
@@ -160,7 +224,7 @@ fn test_drop_pong2(config: &TestConfig) -> TestResult {
     check(sys.read_local_messages("client"), data)
 }
 
-fn test_10results_unique(config: &TestConfig) -> TestResult {
+fn test_10_unique_results(config: &TestConfig) -> TestResult {
     let mut sys = build_system(config);
     sys.network().set_delays(1.0, 2.0);
     for i in 0..10 {
@@ -172,7 +236,7 @@ fn test_10results_unique(config: &TestConfig) -> TestResult {
     Ok(true)
 }
 
-fn test_10results_unique_unreliable(config: &TestConfig) -> TestResult {
+fn test_10_unique_results_unreliable(config: &TestConfig) -> TestResult {
     let mut sys = build_system(config);
     sys.network().set_delays(1.0, 2.0);
     sys.network().set_drop_rate(0.5);
@@ -188,7 +252,7 @@ fn test_10results_unique_unreliable(config: &TestConfig) -> TestResult {
 // MODEL CHECKING ------------------------------------------------------------------------------------------------------
 
 fn test_mc_reliable_network(config: &TestConfig) -> TestResult {
-    let system = build_system(config);
+    let sys = build_system(config);
     let data = r#"{"value": 0}"#.to_string();
     let messages_expected = HashSet::<String>::from_iter([data.clone()]);
 
@@ -200,7 +264,7 @@ fn test_mc_reliable_network(config: &TestConfig) -> TestResult {
             invariants::state_depth(20),
         ]));
 
-    let mut mc = ModelChecker::new(&system);
+    let mut mc = ModelChecker::new(&sys);
     let res = mc.run_with_change::<Bfs>(strategy_config, |system| {
         system.send_local_message("client-node", "client", Message::new("PING", &data));
     });
@@ -214,10 +278,10 @@ fn test_mc_reliable_network(config: &TestConfig) -> TestResult {
 }
 
 fn test_mc_unreliable_network(config: &TestConfig) -> TestResult {
-    let system = build_system(config);
+    let sys = build_system(config);
     let data = r#"{"value": 0}"#.to_string();
     let messages_expected = HashSet::<String>::from_iter([data.clone()]);
-    system.network().set_drop_rate(0.3);
+    sys.network().set_drop_rate(0.5);
     let strategy_config = StrategyConfig::default()
         .prune(prunes::state_depth(7))
         .goal(goals::got_n_local_messages("client-node", "client", 1))
@@ -226,7 +290,7 @@ fn test_mc_unreliable_network(config: &TestConfig) -> TestResult {
             "client",
             messages_expected,
         ));
-    let mut mc = ModelChecker::new(&system);
+    let mut mc = ModelChecker::new(&sys);
 
     let res = mc.run_with_change::<Bfs>(strategy_config, |system| {
         system.send_local_message("client-node", "client", Message::new("PING", &data));
@@ -242,7 +306,7 @@ fn test_mc_unreliable_network(config: &TestConfig) -> TestResult {
 
 fn test_mc_limited_message_drops(config: &TestConfig) -> TestResult {
     let sys = build_system(config);
-    sys.network().set_drop_rate(0.1);
+    sys.network().set_drop_rate(0.5);
     let data = r#"{"value": 0}"#.to_string();
     let messages_expected = HashSet::<String>::from_iter([data.clone()]);
     let num_drops_allowed = 3;
@@ -272,7 +336,7 @@ fn test_mc_limited_message_drops(config: &TestConfig) -> TestResult {
 }
 
 fn test_mc_consecutive_messages(config: &TestConfig) -> TestResult {
-    let system = build_system(config);
+    let sys = build_system(config);
     let data = r#"{"value": 0}"#.to_string();
     let data2 = r#"{"value": 1}"#.to_string();
 
@@ -293,7 +357,7 @@ fn test_mc_consecutive_messages(config: &TestConfig) -> TestResult {
                 invariants::state_depth(20 * i),
             ]))
             .collect(collects::got_n_local_messages("client-node", "client", i as usize));
-        let mut mc = ModelChecker::new(&system);
+        let mut mc = ModelChecker::new(&sys);
 
         let res = if i == 1 {
             mc.run_with_change::<Bfs>(strategy_config, |system| {
@@ -310,78 +374,11 @@ fn test_mc_consecutive_messages(config: &TestConfig) -> TestResult {
                 return Err(e.message());
             }
             Ok(stats) => {
+                // uncomment to see how many intermediate states were collected:
                 // println!("{}", stats.collected_states.len());
                 collected_states = stats.collected_states;
             }
         }
     }
     Ok(true)
-}
-
-// CLI -----------------------------------------------------------------------------------------------------------------
-
-/// Ping-Pong Tests
-#[derive(Parser, Debug)]
-#[clap(about, long_about = None)]
-struct Args {
-    /// Path to Python file with PingClient and PingServer implementations
-    /// or name of Rust implementation (basic or retry)
-    #[clap(long = "impl", short)]
-    impl_path: String,
-
-    /// Test to run (optional)
-    #[clap(long = "test", short)]
-    test: Option<String>,
-
-    /// Random seed used in tests
-    #[clap(long, short, default_value = "123")]
-    seed: u64,
-}
-
-// MAIN ----------------------------------------------------------------------------------------------------------------
-
-fn main() {
-    let args = Args::parse();
-    if args.impl_path.ends_with(".py") {
-        env::set_var("PYTHONPATH", "../../crates/anysystem-py/python");
-    }
-    init_logger(LevelFilter::Debug);
-    let config = TestConfig {
-        impl_path: args.impl_path,
-        seed: args.seed,
-    };
-
-    let mut tests = TestSuite::new();
-    tests.add("RUN", test_run, config.clone());
-    tests.add("RESULT", test_result, config.clone());
-    tests.add("RESULT UNRELIABLE", test_result_unreliable, config.clone());
-    tests.add("10 RESULTS UNRELIABLE", test_10results_unreliable, config.clone());
-    tests.add("DROP PING", test_drop_ping, config.clone());
-    tests.add("DROP PONG", test_drop_pong, config.clone());
-    tests.add("DROP PING 2", test_drop_ping2, config.clone());
-    tests.add("DROP PONG 2", test_drop_pong2, config.clone());
-    tests.add("10 UNIQUE RESULTS", test_10results_unique, config.clone());
-    tests.add(
-        "10 UNIQUE RESULTS UNRELIABLE",
-        test_10results_unique_unreliable,
-        config.clone(),
-    );
-    tests.add("MODEL CHECKING", test_mc_reliable_network, config.clone());
-    tests.add("MODEL CHECKING UNRELIABLE", test_mc_unreliable_network, config.clone());
-    tests.add(
-        "MODEL CHECKING LIMITED DROPS",
-        test_mc_limited_message_drops,
-        config.clone(),
-    );
-    tests.add(
-        "MODEL CHECKING CONSECUTIVE MESSAGES",
-        test_mc_consecutive_messages,
-        config,
-    );
-
-    if args.test.is_none() {
-        tests.run();
-    } else {
-        tests.run_test(&args.test.unwrap());
-    }
 }
