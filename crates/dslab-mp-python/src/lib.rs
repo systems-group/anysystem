@@ -1,3 +1,6 @@
+#![warn(missing_docs)]
+//! Python integration for DSLab MP.
+
 use std::fs;
 use std::rc::Rc;
 
@@ -12,6 +15,7 @@ use dslab_mp::process::{Process, ProcessState, StringProcessState};
 #[cfg(test)]
 mod tests;
 
+/// Creates instances of [`PyProcess`].
 pub struct PyProcessFactory {
     proc_class: PyObject,
     msg_class: Rc<PyObject>,
@@ -20,6 +24,7 @@ pub struct PyProcessFactory {
 }
 
 impl PyProcessFactory {
+    /// Creates a process factory using the specified Python file and class name.
     pub fn new(impl_path: &str, impl_class: &str) -> Self {
         let impl_code = fs::read_to_string(impl_path).unwrap();
         let impl_realpath = fs::canonicalize(impl_path).unwrap();
@@ -41,6 +46,7 @@ impl PyProcessFactory {
         }
     }
 
+    /// Creates a process instance with specified arguments and random seed.
     pub fn build(&self, args: impl IntoPy<Py<PyTuple>>, seed: u64) -> PyProcess {
         let proc = Python::with_gil(|py| -> PyObject {
             py.run(format!("import random\nrandom.seed({})", seed).as_str(), None, None)
@@ -67,6 +73,7 @@ impl PyProcessFactory {
     }
 }
 
+/// Process implementation backed by a Python object.
 pub struct PyProcess {
     proc: PyObject,
     msg_class: Rc<PyObject>,
@@ -78,6 +85,7 @@ pub struct PyProcess {
 }
 
 impl PyProcess {
+    /// Sets the frequency of updating the maximum size of process inner data.
     pub fn set_max_size_freq(&mut self, freq: u32) {
         self.max_size_freq = freq;
         self.max_size_counter = 1;
