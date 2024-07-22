@@ -12,14 +12,11 @@ use log::LevelFilter;
 use sugars::boxed;
 
 use anysystem::logger::LogEntry;
-use anysystem::mc::model_checker::ModelChecker;
 use anysystem::mc::predicates::{collects, goals, invariants, prunes};
-use anysystem::mc::strategies::bfs::Bfs;
-use anysystem::mc::strategy::StrategyConfig;
-use anysystem::message::Message;
-use anysystem::process::Process;
-use anysystem::system::System;
+use anysystem::mc::strategies::Bfs;
+use anysystem::mc::{ModelChecker, StrategyConfig};
 use anysystem::test::{TestResult, TestSuite};
+use anysystem::{Message, Process, System};
 use anysystem_py::PyProcessFactory;
 
 use crate::basic::client::BasicPingClient;

@@ -1,6 +1,4 @@
-use anysystem::context::Context;
-use anysystem::message::Message;
-use anysystem::process::Process;
+use anysystem::{Context, Message, Process};
 
 #[derive(Clone)]
 pub struct RetryPingServer {}

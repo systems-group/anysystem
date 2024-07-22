@@ -2,7 +2,7 @@
 
 use serde::Serialize;
 
-use crate::message::Message;
+use crate::Message;
 
 /// Message is received.
 #[derive(Clone, Serialize)]

@@ -7,8 +7,7 @@ use rand::{Rng, SeedableRng};
 use rand_pcg::Pcg64;
 use simcore::SimulationContext;
 
-use crate::message::Message;
-use crate::node::{ProcessEvent, TimerBehavior};
+use crate::{Message, ProcessEvent, TimerBehavior};
 
 /// Proxy for interaction of a process with the system.
 pub struct Context {

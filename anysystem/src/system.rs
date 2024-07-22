@@ -12,10 +12,7 @@ use simcore::{cast, Simulation};
 
 use crate::events::MessageReceived;
 use crate::logger::{LogEntry, Logger};
-use crate::message::Message;
-use crate::network::Network;
-use crate::node::{EventLogEntry, Node};
-use crate::process::Process;
+use crate::{EventLogEntry, Message, Network, Node, Process};
 
 /// Models distributed system consisting of multiple nodes connected via network.
 pub struct System {

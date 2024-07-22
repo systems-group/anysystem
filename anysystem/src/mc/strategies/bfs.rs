@@ -2,12 +2,10 @@
 
 use std::collections::VecDeque;
 
-use crate::mc::error::McError;
-use crate::mc::state::McState;
-use crate::mc::strategy::{
-    CollectFn, ExecutionMode, GoalFn, InvariantFn, McResult, McStats, PruneFn, Strategy, StrategyConfig, VisitedStates,
+use crate::mc::{
+    CollectFn, ExecutionMode, GoalFn, InvariantFn, McError, McResult, McState, McStats, McSystem, PruneFn, Strategy,
+    StrategyConfig, VisitedStates,
 };
-use crate::mc::system::McSystem;
 
 /// The search strategy based on the [BFS](https://en.wikipedia.org/wiki/Breadth-first_search) algorithm.
 pub struct Bfs {

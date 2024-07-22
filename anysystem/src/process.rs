@@ -7,8 +7,7 @@ use std::rc::Rc;
 use downcast_rs::{impl_downcast, Downcast};
 use dyn_clone::{clone_trait_object, DynClone};
 
-use crate::context::Context;
-use crate::message::Message;
+use crate::{Context, Message};
 
 /// A trait for process implementations.
 pub trait Process: DynClone {
@@ -28,7 +27,7 @@ pub trait Process: DynClone {
 
     /// Returns the process state.
     fn state(&self) -> Result<Rc<dyn ProcessState>, String> {
-        Ok(Rc::new(ProcessStateStub {}))
+        Ok(Rc::new(EmptyProcessState {}))
     }
 
     /// Restores the process state.
@@ -51,7 +50,7 @@ impl_downcast!(ProcessState);
 
 /// Empty process state.
 #[derive(Debug, Hash, Eq, PartialEq)]
-pub struct ProcessStateStub {}
+pub struct EmptyProcessState {}
 
 /// Process state encoded by a string.
 pub type StringProcessState = String;

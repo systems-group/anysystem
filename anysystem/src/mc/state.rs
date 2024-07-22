@@ -5,9 +5,7 @@ use std::hash::{Hash, Hasher};
 
 use crate::logger::LogEntry;
 
-use crate::mc::network::McNetwork;
-use crate::mc::node::McNodeState;
-use crate::mc::pending_events::PendingEvents;
+use crate::mc::{McNetwork, McNodeState, PendingEvents};
 
 /// Stores comprehensive information about the state of the checked system.
 /// Used to preserve and restore particular situations in the system.

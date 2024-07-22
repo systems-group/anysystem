@@ -1,6 +1,8 @@
 //! Standard predicate implementations that can be used in model checking strategy.
 
-use crate::{logger::LogEntry, mc::state::McState};
+use crate::logger::LogEntry;
+
+use crate::mc::McState;
 
 pub(crate) fn default_prune(_: &McState) -> Option<String> {
     None
@@ -32,8 +34,7 @@ pub mod invariants {
 
     use sugars::boxed;
 
-    use crate::mc::state::McState;
-    use crate::mc::strategy::InvariantFn;
+    use crate::mc::{InvariantFn, McState};
 
     /// Combines multiple invariant functions by returning `Ok` iff all invariants are satisfied.
     pub fn all_invariants(mut rules: Vec<InvariantFn>) -> InvariantFn {
@@ -124,8 +125,8 @@ pub mod goals {
     use sugars::boxed;
 
     use crate::logger::LogEntry;
-    use crate::mc::state::McState;
-    use crate::mc::strategy::GoalFn;
+
+    use crate::mc::{GoalFn, McState};
 
     /// Combines multiple goal functions by returning `Some()` iff at least one goal is reached.
     pub fn any_goal(mut goals: Vec<GoalFn>) -> GoalFn {
@@ -215,9 +216,9 @@ pub mod prunes {
     use sugars::boxed;
 
     use crate::logger::LogEntry;
+
     use crate::mc::predicates::count_events_in_trace;
-    use crate::mc::state::McState;
-    use crate::mc::strategy::PruneFn;
+    use crate::mc::{McState, PruneFn};
 
     /// Combines multiple prune functions by returning `Some()` iff at least one prune is satisfied.
     pub fn any_prune(mut prunes: Vec<PruneFn>) -> PruneFn {
@@ -342,9 +343,9 @@ pub mod collects {
     use sugars::boxed;
 
     use crate::logger::LogEntry;
+
     use crate::mc::predicates::count_events_in_trace;
-    use crate::mc::state::McState;
-    use crate::mc::strategy::CollectFn;
+    use crate::mc::{CollectFn, McState};
 
     /// Checks if the given process produced `n` local messages.
     pub fn got_n_local_messages<S>(node: S, proc: S, n: usize) -> CollectFn

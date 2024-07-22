@@ -8,9 +8,8 @@ use colored::Colorize;
 use pyo3::prelude::*;
 use pyo3::types::{PyModule, PyString, PyTuple};
 
-use anysystem::context::Context;
-use anysystem::message::Message;
-use anysystem::process::{Process, ProcessState, StringProcessState};
+use anysystem::process::StringProcessState;
+use anysystem::{Context, Message, Process, ProcessState};
 
 #[cfg(test)]
 mod tests;

@@ -3,16 +3,14 @@ use std::collections::HashSet;
 use std::env;
 use sugars::boxed;
 
-use anysystem::mc::model_checker::ModelChecker;
-use anysystem::mc::predicates::{goals, invariants, prunes};
-use anysystem::mc::strategies::bfs::Bfs;
-use anysystem::mc::strategies::dfs::Dfs;
-use anysystem::mc::strategy::StrategyConfig;
-use anysystem::message::Message;
 use anysystem::process::StringProcessState;
-use anysystem::run_mc;
-use anysystem::system::System;
+use anysystem::{Message, System};
 use anysystem_py::PyProcessFactory;
+
+use anysystem::mc::predicates::{goals, invariants, prunes};
+use anysystem::mc::strategies::{Bfs, Dfs};
+use anysystem::mc::{ModelChecker, StrategyConfig};
+use anysystem::run_mc;
 
 fn build_system(impl_file: &str) -> System {
     let mut sys = System::new(12345);

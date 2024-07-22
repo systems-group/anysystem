@@ -9,20 +9,16 @@ use std::rc::Rc;
 use ordered_float::OrderedFloat;
 
 use crate::logger::LogEntry;
-use crate::mc::events::{EventOrderingMode, McEvent, McEventId};
-use crate::mc::network::McNetwork;
-use crate::mc::node::McNode;
-use crate::mc::pending_events::PendingEvents;
-use crate::mc::state::McState;
-use crate::mc::trace_handler::TraceHandler;
-use crate::message::Message;
+use crate::Message;
+
+use crate::mc::{EventOrderingMode, McEvent, McEventId, McNetwork, McNode, McState, PendingEvents, TraceHandler};
 
 /// Used for specifying delays.
 pub type McTime = OrderedFloat<f64>;
 
 /// Models distributed system consisting of multiple nodes connected via network.
 ///
-/// Analogue of [`crate::system::System`] for model checking mode.
+/// Analogue of [`crate::System`] for model checking mode.
 #[derive(Clone)]
 pub struct McSystem {
     nodes: HashMap<String, McNode>,

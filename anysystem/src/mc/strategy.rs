@@ -9,17 +9,13 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use sugars::boxed;
 
-use crate::mc::error::McError;
-use crate::mc::events::McEvent::{
-    MessageCorrupted, MessageDropped, MessageDuplicated, MessageReceived, TimerCancelled, TimerFired,
-};
-use crate::mc::events::{McEvent, McEventId};
+use crate::util::t;
+use crate::Message;
+
 use crate::mc::network::DeliveryOptions;
 use crate::mc::predicates;
-use crate::mc::state::McState;
-use crate::mc::system::McSystem;
-use crate::message::Message;
-use crate::util::t;
+use crate::mc::McEvent::*;
+use crate::mc::{McError, McEvent, McEventId, McState, McSystem};
 
 /// Configuration of model checking strategy.
 pub struct StrategyConfig {

@@ -5,10 +5,9 @@ use std::collections::{HashMap, HashSet};
 
 use serde::Serialize;
 
-use crate::mc::events::McEvent;
-use crate::mc::system::McTime;
-use crate::message::Message;
-use crate::network::Network;
+use crate::{Message, Network};
+
+use crate::mc::{McEvent, McTime};
 
 const DUPL_COUNT: u32 = 2;
 
@@ -30,7 +29,7 @@ pub enum DeliveryOptions {
 
 /// Represents a network that transmits messages between processes located on different nodes.
 ///
-/// Analogue of [`crate::network::Network`] for model checking mode.
+/// Analogue of [`crate::Network`] for model checking mode.
 #[derive(Debug, Clone)]
 pub struct McNetwork {
     corrupt_rate: f64,

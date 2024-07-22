@@ -3,10 +3,10 @@
 use serde::Serialize;
 
 use crate::logger::LogEntry;
-use crate::message::Message;
+use crate::Message;
 
 use crate::mc::network::DeliveryOptions;
-use crate::mc::system::McTime;
+use crate::mc::McTime;
 
 /// Identifier of McEvent.
 pub type McEventId = usize;

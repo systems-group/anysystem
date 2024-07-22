@@ -5,16 +5,12 @@ use std::rc::Rc;
 
 use colored::Colorize;
 
-use crate::context::Context;
 use crate::logger::LogEntry;
-use crate::message::Message;
-use crate::node::{EventLogEntry, ProcessEntry, ProcessEvent, TimerBehavior};
-use crate::process::ProcessState;
+use crate::node::ProcessEntry;
+use crate::{Context, EventLogEntry, Message, ProcessEvent, ProcessState, TimerBehavior};
 
-use crate::mc::events::McEvent;
 use crate::mc::network::DeliveryOptions;
-use crate::mc::system::McTime;
-use crate::mc::trace_handler::TraceHandler;
+use crate::mc::{McEvent, McTime, TraceHandler};
 
 #[derive(Debug, Clone)]
 pub struct ProcessEntryState {

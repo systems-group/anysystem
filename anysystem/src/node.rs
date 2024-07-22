@@ -8,12 +8,9 @@ use colored::*;
 
 use simcore::{cast, Event, EventHandler, Id, SimulationContext};
 
-use crate::context::Context;
 use crate::events::{MessageReceived, TimerFired};
 use crate::logger::{LogEntry, Logger};
-use crate::message::Message;
-use crate::network::Network;
-use crate::process::{Process, ProcessState};
+use crate::{Context, Message, Network, Process, ProcessState};
 
 /// Event log entry as a pair of time and event.
 #[derive(Clone, Debug)]

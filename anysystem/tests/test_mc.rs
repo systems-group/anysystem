@@ -6,18 +6,13 @@ use std::rc::Rc;
 use rstest::rstest;
 use sugars::{boxed, rc, refcell};
 
-use anysystem::context::Context;
 use anysystem::logger::LogEntry;
-use anysystem::mc::error::McError;
-use anysystem::mc::model_checker::ModelChecker;
-use anysystem::mc::state::McState;
-use anysystem::mc::strategies::bfs::Bfs;
-use anysystem::mc::strategies::dfs::Dfs;
-use anysystem::mc::strategy::{GoalFn, InvariantFn, PruneFn, StrategyConfig, VisitedStates};
-use anysystem::message::Message;
-use anysystem::process::{Process, ProcessState, StringProcessState};
+use anysystem::process::StringProcessState;
+use anysystem::{Context, Message, Process, ProcessState, System};
+
+use anysystem::mc::strategies::{Bfs, Dfs};
+use anysystem::mc::{GoalFn, InvariantFn, McError, McState, ModelChecker, PruneFn, StrategyConfig, VisitedStates};
 use anysystem::run_mc;
-use anysystem::system::System;
 
 macro_rules! str_vec {
     ($($x:expr),*) => (vec![$($x.to_string()),*]);

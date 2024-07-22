@@ -3,9 +3,9 @@ use std::rc::Rc;
 
 use serde::Serialize;
 
+use anysystem::{Message, Process, ProcessState, System};
+
 use crate::PyProcessFactory;
-use anysystem::process::ProcessState;
-use anysystem::{message::Message, process::Process, system::System};
 
 fn build_system() -> (System, Rc<dyn ProcessState>) {
     let mut sys = System::new(0);

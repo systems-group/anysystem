@@ -12,8 +12,8 @@ use simcore::Id;
 use simcore::SimulationContext;
 
 use crate::events::MessageReceived;
-use crate::logger::*;
-use crate::message::Message;
+use crate::logger::{LogEntry, Logger};
+use crate::Message;
 
 /// Represents a network that transmits messages between processes located on different nodes.
 pub struct Network {

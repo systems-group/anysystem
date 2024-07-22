@@ -1,8 +1,7 @@
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 
-use crate::mc::dependency::DependencyResolver;
-use crate::mc::events::{EventOrderingMode, McEvent, McEventId};
+use crate::mc::{DependencyResolver, EventOrderingMode, McEvent, McEventId};
 
 /// Stores pending events and provides a convenient interface for working with them.  
 #[derive(Default, Clone, Hash, Eq, PartialEq, Debug)]
@@ -150,11 +149,10 @@ mod tests {
     use rand::prelude::IteratorRandom;
     use std::collections::BTreeSet;
 
-    use crate::mc::events::McEvent;
+    use crate::Message;
+
     use crate::mc::network::DeliveryOptions;
-    use crate::mc::pending_events::{EventOrderingMode, PendingEvents};
-    use crate::mc::system::McTime;
-    use crate::message::Message;
+    use crate::mc::{EventOrderingMode, McEvent, McTime, PendingEvents};
 
     #[test]
     fn test_mc_time() {

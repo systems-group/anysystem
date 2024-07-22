@@ -10,7 +10,7 @@ use colored::Colorize;
 use serde::Serialize;
 use simcore::Id;
 
-use crate::{message::Message, util::t};
+use crate::{util::t, Message};
 
 /// Implements logging of events to console and optionally to a file.
 /// Also provides the access to the list of all logged events (trace).  

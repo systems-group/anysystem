@@ -1,8 +1,8 @@
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
-use crate::mc::events::McEventId;
-use crate::mc::system::McTime;
-use crate::message::Message;
+use crate::Message;
+
+use crate::mc::{McEventId, McTime};
 
 /// Tracks and enforces dependencies between events.
 ///
@@ -93,7 +93,9 @@ impl DependencyResolver {
 mod tests {
     use serde::Serialize;
 
-    use crate::{mc::dependency::DependencyResolver, message::Message};
+    use crate::Message;
+
+    use crate::mc::DependencyResolver;
 
     #[derive(Serialize)]
     struct EmptyMessage {}

@@ -8,15 +8,13 @@ use simcore::cast;
 
 use crate::events::{MessageReceived, TimerFired};
 use crate::logger::LogEntry;
-use crate::mc::events::McEvent;
-use crate::mc::network::{DeliveryOptions, McNetwork};
-use crate::mc::node::McNode;
-use crate::mc::pending_events::PendingEvents;
-use crate::mc::state::McState;
-use crate::mc::strategy::{McResult, McStats, Strategy, StrategyConfig};
-use crate::mc::system::{McSystem, McTime};
-use crate::mc::trace_handler::TraceHandler;
-use crate::system::System;
+use crate::System;
+
+use crate::mc::network::DeliveryOptions;
+use crate::mc::{
+    McEvent, McNetwork, McNode, McResult, McState, McStats, McSystem, McTime, PendingEvents, Strategy, StrategyConfig,
+    TraceHandler,
+};
 
 /// Main class of (and entrypoint to) the model checking testing technique.
 pub struct ModelChecker {

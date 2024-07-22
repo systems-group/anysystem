@@ -1,8 +1,6 @@
 use std::rc::Rc;
 
-use anysystem::context::Context;
-use anysystem::message::Message;
-use anysystem::process::{Process, ProcessState};
+use anysystem::{Context, Message, Process, ProcessState};
 
 #[derive(Clone)]
 pub struct RetryPingClient {
