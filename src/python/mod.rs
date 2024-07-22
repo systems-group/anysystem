@@ -1,5 +1,4 @@
-#![warn(missing_docs)]
-//! Python integration for AnySystem.
+//! Python integration.
 
 use std::fs;
 use std::rc::Rc;
@@ -8,8 +7,8 @@ use colored::Colorize;
 use pyo3::prelude::*;
 use pyo3::types::{PyModule, PyString, PyTuple};
 
-use anysystem::process::StringProcessState;
-use anysystem::{Context, Message, Process, ProcessState};
+use crate::process::StringProcessState;
+use crate::{Context, Message, Process, ProcessState};
 
 #[cfg(test)]
 mod tests;

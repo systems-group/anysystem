@@ -1,3 +1,38 @@
+[package]
+name = "anysystem"
+version = "0.1.0"
+edition = "2021"
+description = "A framework for deterministic simulation and testing of distributed systems"
+readme = "readme.md"
+homepage = "https://github.com/systems-group/anysystem"
+repository = "https://github.com/systems-group/anysystem"
+license = "MIT OR Apache-2.0"
+keywords = ["distributed-systems", "message-passing", "simulation", "testing", "model-checking"]
+categories = ["simulation", "development-tools::testing"]
+include = ["/src", "/python", "/tests", "/examples", "LICENSE*", "changelog.md"]
+
+[dependencies]
+simcore = "0.1"
+colored = "2"
+downcast-rs = "1.2"
+dyn-clone = "1"
+lazy_static = "1.5"
+log = "0.4"
+ordered-float = { version = "4.2", features = ["serde"] }
+rand = "0.8"
+rand_pcg = "0.3"
+regex = "1.10"
+rstest = "0.21"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sugars = "3"
+
+[dependencies.pyo3]
+version = "0.19"
+features = ["auto-initialize"]
+
+[package.metadata.docs.rs]
+rustdoc-args = ["--cfg", "docsrs"]
+
 [workspace]
-members = ["anysystem", "anysystem-py", "examples/*"]
-resolver = "2"
+members = ["examples/*"]

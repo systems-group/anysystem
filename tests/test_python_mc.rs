@@ -4,8 +4,8 @@ use std::env;
 use sugars::boxed;
 
 use anysystem::process::StringProcessState;
+use anysystem::python::PyProcessFactory;
 use anysystem::{Message, System};
-use anysystem_py::PyProcessFactory;
 
 use anysystem::mc::predicates::{goals, invariants, prunes};
 use anysystem::mc::strategies::{Bfs, Dfs};

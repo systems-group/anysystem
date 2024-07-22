@@ -3,14 +3,14 @@ use std::rc::Rc;
 
 use serde::Serialize;
 
-use anysystem::{Message, Process, ProcessState, System};
+use crate::{Message, Process, ProcessState, System};
 
-use crate::PyProcessFactory;
+use crate::python::PyProcessFactory;
 
 fn build_system() -> (System, Rc<dyn ProcessState>) {
     let mut sys = System::new(0);
     sys.add_node("node");
-    let proc_f = PyProcessFactory::new("python-tests/process.py", "TestProcess");
+    let proc_f = PyProcessFactory::new("tests/python/process.py", "TestProcess");
     let process = proc_f.build((), 1);
     let state = process.state().unwrap();
     sys.add_process("proc", Box::new(process), "node");

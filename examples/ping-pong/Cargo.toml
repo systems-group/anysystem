@@ -1,14 +1,14 @@
 [package]
 name = "ping-pong"
-version = "0.1.0"
-license = "MIT OR Apache-2.0"
+version = "0.0.0"
 edition = "2021"
+license = "MIT OR Apache-2.0"
+publish = false
 
 [dependencies]
-anysystem = { path = "../../anysystem" }
-anysystem-py = { path = "../../anysystem-py" }
+anysystem = { path = "../.." }
 assertables = "3.2.2"
-clap = { version = "3.1.17", features = ["cargo", "derive"] }
-env_logger = "0.9.0"
-log = "0.4.14"
-sugars = "3.0.0"
+clap = { version = "4", features = ["cargo", "derive"] }
+env_logger = "0.11"
+log = "0.4"
+sugars = "3"

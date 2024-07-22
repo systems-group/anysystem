@@ -15,9 +15,9 @@ use anysystem::logger::LogEntry;
 use anysystem::mc::predicates::{collects, goals, invariants, prunes};
 use anysystem::mc::strategies::Bfs;
 use anysystem::mc::{ModelChecker, StrategyConfig};
+use anysystem::python::PyProcessFactory;
 use anysystem::test::{TestResult, TestSuite};
 use anysystem::{Message, Process, System};
-use anysystem_py::PyProcessFactory;
 
 use crate::basic::client::BasicPingClient;
 use crate::basic::server::BasicPingServer;
@@ -49,7 +49,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
     if args.impl_path.ends_with(".py") {
-        env::set_var("PYTHONPATH", "../../anysystem-py/python");
+        env::set_var("PYTHONPATH", "../../python");
     }
     init_logger(LevelFilter::Debug);
     let config = TestConfig {

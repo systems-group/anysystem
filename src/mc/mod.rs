@@ -1,6 +1,6 @@
 #![warn(missing_docs)]
 
-//! Module for testing message passing code with model checking technique.
+//! Model checking support.
 
 mod dependency;
 pub mod error;
