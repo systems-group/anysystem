@@ -1,5 +1,7 @@
 //! Testing facilities.
 
+use std::collections::BTreeMap;
+
 /// A test result.
 pub type TestResult = Result<bool, String>;
 
@@ -32,35 +34,38 @@ impl<T> TestSuite<T> {
     /// Executes the test suite by running each test in turn.
     ///
     /// Collects and prints the result of each test, and prints the summary in the end.  
-    /// Terminates the current process with exit code 0 if all tests have passed and 1 otherwise.
-    pub fn run(&mut self) {
+    /// Returns whether all tests are passed and results for each test.
+    pub fn run(&mut self) -> (bool, BTreeMap<String, TestResult>) {
+        let total_count = self.tests.len();
         let mut passed_count = 0;
-        let mut failed_tests = Vec::new();
+        let mut test_results = BTreeMap::new();
         for test in &self.tests {
             println!("\n--- {} ---\n", test.name);
-            match (test.func)(&test.config) {
+            let result = (test.func)(&test.config);
+            test_results.insert(test.name.clone(), result.clone());
+            match result {
                 Ok(_) => {
                     println!("\nPASSED\n");
                     passed_count += 1;
                 }
                 Err(e) => {
                     println!("\nFAILED: {}\n", e);
-                    failed_tests.push((&test.name, e));
                 }
             }
         }
         println!("-------------------------------------------------------------------------------");
-        println!("\nPassed {} from {} tests\n", passed_count, self.tests.len());
-        if !failed_tests.is_empty() {
+        println!("\nPassed {} from {} tests\n", passed_count, total_count);
+        let all_passed = passed_count == total_count;
+        if !all_passed {
             println!("Failed tests:");
-            for (test, e) in failed_tests {
-                println!("- {}: {}", test, e);
+            for (test, result) in test_results.iter() {
+                if let Err(e) = result {
+                    println!("- {}: {}", test, e)
+                }
             }
             println!();
-            std::process::exit(1);
-        } else {
-            std::process::exit(0);
         }
+        (all_passed, test_results)
     }
 
     /// Runs the specified test and prints its result.
