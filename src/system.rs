@@ -169,7 +169,7 @@ impl System {
     }
 
     /// Returns an immutable reference to the node.
-    pub fn get_node(&self, name: &str) -> Option<Ref<Node>> {
+    pub fn get_node(&self, name: &str) -> Option<Ref<'_, Node>> {
         self.nodes.get(name).map(|res| res.borrow())
     }
 
