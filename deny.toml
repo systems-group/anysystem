@@ -20,18 +20,6 @@ exceptions = [
 
 [bans]
 multiple-versions = "deny"
-skip = [
-    { name = "syn", version = "1.0" },
-    { name = "windows-sys", version = "0.48" },
-    { name = "windows-targets", version = "0.48" },
-    { name = "windows_aarch64_gnullvm", version = "0.48" },
-    { name = "windows_aarch64_msvc", version = "0.48" },
-    { name = "windows_i686_gnu", version = "0.48" },
-    { name = "windows_i686_msvc", version = "0.48" },
-    { name = "windows_x86_64_gnu", version = "0.48" },
-    { name = "windows_x86_64_gnullvm", version = "0.48" },
-    { name = "windows_x86_64_msvc", version = "0.48" },
-]
 
 [sources]
 unknown-registry = "warn"
