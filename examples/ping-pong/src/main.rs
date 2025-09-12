@@ -225,7 +225,7 @@ fn test_10_unique_results(config: &TestConfig) -> TestResult {
     let mut sys = build_system(config);
     sys.network().set_delays(1.0, 2.0);
     for i in 0..10 {
-        let data = format!(r#"{{"value": "Hello{}!"}}"#, i);
+        let data = format!(r#"{{"value": "Hello{i}!"}}"#);
         sys.send_local_message("client", Message::new("PING", &data));
         let messages = sys.step_until_local_message("client")?;
         check(messages, &data)?;
@@ -238,7 +238,7 @@ fn test_10_unique_results_unreliable(config: &TestConfig) -> TestResult {
     sys.network().set_delays(1.0, 2.0);
     sys.network().set_drop_rate(0.5);
     for i in 0..10 {
-        let data = format!(r#"{{"value": "Hello{}!"}}"#, i);
+        let data = format!(r#"{{"value": "Hello{i}!"}}"#);
         sys.send_local_message("client", Message::new("PING", &data));
         let messages = sys.step_until_local_message("client")?;
         check(messages, &data)?;

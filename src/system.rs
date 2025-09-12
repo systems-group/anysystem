@@ -53,14 +53,14 @@ impl System {
     }
 
     /// Returns a mutable reference to system logger.
-    pub fn logger(&self) -> RefMut<Logger> {
+    pub fn logger(&self) -> RefMut<'_, Logger> {
         self.logger.borrow_mut()
     }
 
     // Network ---------------------------------------------------------------------------------------------------------
 
     /// Returns a mutable reference to network.
-    pub fn network(&self) -> RefMut<Network> {
+    pub fn network(&self) -> RefMut<'_, Network> {
         self.net.borrow_mut()
     }
 
@@ -84,8 +84,7 @@ impl System {
         let node_id = self.sim.add_handler(name, node.clone());
         assert!(
             self.nodes.insert(name.to_string(), node).is_none(),
-            "Node with name {} already exists, node names must be unique",
-            name
+            "Node with name {name} already exists, node names must be unique"
         );
         self.net.borrow_mut().add_node(name.to_string(), node_id);
         self.logger.borrow_mut().log(LogEntry::NodeStarted {
@@ -170,12 +169,12 @@ impl System {
     }
 
     /// Returns an immutable reference to the node.
-    pub fn get_node(&self, name: &str) -> Option<Ref<Node>> {
+    pub fn get_node(&self, name: &str) -> Option<Ref<'_, Node>> {
         self.nodes.get(name).map(|res| res.borrow())
     }
 
     /// Returns a mutable reference to the node.
-    pub fn get_mut_node(&self, name: &str) -> Option<RefMut<Node>> {
+    pub fn get_mut_node(&self, name: &str) -> Option<RefMut<'_, Node>> {
         self.nodes.get(name).map(|res| res.borrow_mut())
     }
 
@@ -198,8 +197,7 @@ impl System {
             self.proc_nodes
                 .insert(name.to_string(), self.nodes[node].clone())
                 .is_none(),
-            "Process with name {} already exists, process names must be unique",
-            name
+            "Process with name {name} already exists, process names must be unique"
         );
         self.logger.borrow_mut().log(LogEntry::ProcessStarted {
             time: self.sim.time(),

@@ -173,13 +173,13 @@ mod tests {
             for event_time in times {
                 let event = McEvent::TimerFired {
                     proc: node_id.to_string(),
-                    timer: format!("{}", event_time),
+                    timer: format!("{event_time}"),
                     timer_delay: McTime::from(event_time as f64),
                 };
                 rev_id[pending_events.push(event)] = event_time * 3 + node_id;
             }
         }
-        println!("{:?}", rev_id);
+        println!("{rev_id:?}");
         while let Some(id) = pending_events
             .available_events(&EventOrderingMode::Normal)
             .iter()
@@ -189,9 +189,9 @@ mod tests {
             sequence.push(rev_id[id]);
             pending_events.pop(id);
         }
-        println!("{:?}", sequence);
+        println!("{sequence:?}");
         assert_eq!(sequence.len(), 9);
-        let mut timers = vec![0, 0, 0];
+        let mut timers = [0, 0, 0];
         for event_id in sequence {
             let time = event_id / 3;
             let node = event_id % 3;
@@ -204,14 +204,14 @@ mod tests {
     fn test_dependency_resolver_pop() {
         let mut pending_events = PendingEvents::new();
         let mut sequence = Vec::new();
-        let mut rev_id = vec![0; 12];
+        let mut rev_id = [0; 12];
 
         for node_id in 0..3 {
             let times: Vec<u64> = (0..3).collect();
             for event_time in times {
                 let event = McEvent::TimerFired {
                     proc: node_id.to_string(),
-                    timer: format!("{}", event_time),
+                    timer: format!("{event_time}"),
                     timer_delay: McTime::from(1.0 + event_time as f64),
                 };
                 rev_id[pending_events.push(event)] = event_time * 3 + node_id;
@@ -242,7 +242,7 @@ mod tests {
         for node_id in 0..3 {
             let event = McEvent::TimerFired {
                 proc: node_id.to_string(),
-                timer: format!("{}", node_id),
+                timer: format!("{node_id}"),
                 timer_delay: McTime::from(3.),
             };
             rev_id[pending_events.push(event)] = 9 + node_id;
@@ -256,9 +256,9 @@ mod tests {
             sequence.push(rev_id[id]);
             pending_events.pop(id);
         }
-        println!("{:?}", sequence);
+        println!("{sequence:?}");
         assert_eq!(sequence.len(), 12);
-        let mut timers = vec![0, 0, 0];
+        let mut timers = [0, 0, 0];
         for event_id in sequence {
             let time = event_id / 3;
             let node = event_id % 3;

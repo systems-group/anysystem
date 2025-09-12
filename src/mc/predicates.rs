@@ -109,10 +109,10 @@ pub mod invariants {
             }
             for message in local_outbox {
                 if !messages_got.insert(message.data.clone()) {
-                    return Err(format!("message {:?} was duplicated", message));
+                    return Err(format!("message {message:?} was duplicated"));
                 }
                 if !messages_expected.contains(&message.data) {
-                    return Err(format!("message {:?} is not expected", message));
+                    return Err(format!("message {message:?} is not expected"));
                 }
             }
             Ok(())

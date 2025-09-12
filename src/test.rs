@@ -49,18 +49,18 @@ impl<T> TestSuite<T> {
                     passed_count += 1;
                 }
                 Err(e) => {
-                    println!("\nFAILED: {}\n", e);
+                    println!("\nFAILED: {e}\n");
                 }
             }
         }
         println!("-------------------------------------------------------------------------------");
-        println!("\nPassed {} from {} tests\n", passed_count, total_count);
+        println!("\nPassed {passed_count} from {total_count} tests\n");
         let all_passed = passed_count == total_count;
         if !all_passed {
             println!("Failed tests:");
             for (test, result) in test_results.iter() {
                 if let Err(e) = result {
-                    println!("- {}: {}", test, e)
+                    println!("- {test}: {e}")
                 }
             }
             println!();
@@ -75,7 +75,7 @@ impl<T> TestSuite<T> {
                 println!("\n--- {} ---\n", test.name);
                 match (test.func)(&test.config) {
                     Ok(_) => println!("\nPASSED\n"),
-                    Err(e) => println!("\nFAILED: {}\n", e),
+                    Err(e) => println!("\nFAILED: {e}\n"),
                 }
             }
         }
