@@ -428,10 +428,7 @@ impl LogEntry {
                 src,
                 dst,
             } => {
-                t!(format!(
-                    "{src:>10} -x- {dst:<10} {msg:?} ~~> {corrupted_msg:?} <-- message corrupted"
-                )
-                .blue());
+                t!(format!("{src:>10} -x- {dst:<10} {msg:?} ~~> {corrupted_msg:?} <-- message corrupted").blue());
             }
             LogEntry::McMessageDuplicated { msg, src, dst } => {
                 t!(format!(
