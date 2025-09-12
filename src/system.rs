@@ -53,14 +53,14 @@ impl System {
     }
 
     /// Returns a mutable reference to system logger.
-    pub fn logger(&self) -> RefMut<Logger> {
+    pub fn logger(&self) -> RefMut<'_, Logger> {
         self.logger.borrow_mut()
     }
 
     // Network ---------------------------------------------------------------------------------------------------------
 
     /// Returns a mutable reference to network.
-    pub fn network(&self) -> RefMut<Network> {
+    pub fn network(&self) -> RefMut<'_, Network> {
         self.net.borrow_mut()
     }
 
@@ -174,7 +174,7 @@ impl System {
     }
 
     /// Returns a mutable reference to the node.
-    pub fn get_mut_node(&self, name: &str) -> Option<RefMut<Node>> {
+    pub fn get_mut_node(&self, name: &str) -> Option<RefMut<'_, Node>> {
         self.nodes.get(name).map(|res| res.borrow_mut())
     }
 
