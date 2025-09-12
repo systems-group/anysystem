@@ -327,24 +327,16 @@ pub trait Strategy {
                     t!("{:>10} | {:>10} <-- {:<10} {:?}", depth, dst, src, msg);
                 }
                 TimerFired { proc, timer, .. } => {
-                    t!(format!("{:>10} | {:>10} !-- {:<10} <-- timer fired", depth, proc, timer).yellow());
+                    t!(format!("{depth:>10} | {proc:>10} !-- {timer:<10} <-- timer fired").yellow());
                 }
                 TimerCancelled { proc, timer } => {
-                    t!(format!("{:>10} | {:>10} xxx {:<10} <-- timer cancelled", depth, proc, timer).yellow());
+                    t!(format!("{depth:>10} | {proc:>10} xxx {timer:<10} <-- timer cancelled").yellow());
                 }
                 MessageDropped { msg, src, dst, .. } => {
-                    t!(format!(
-                        "{:>10} | {:>10} --x {:<10} {:?} <-- message dropped",
-                        depth, src, dst, msg
-                    )
-                    .red());
+                    t!(format!("{depth:>10} | {src:>10} --x {dst:<10} {msg:?} <-- message dropped").red());
                 }
                 MessageDuplicated { msg, src, dst, .. } => {
-                    t!(format!(
-                        "{:>10} | {:>10} -=≡ {:<10} {:?} <-- message duplicated",
-                        depth, src, dst, msg
-                    )
-                    .blue());
+                    t!(format!("{depth:>10} | {src:>10} -=≡ {dst:<10} {msg:?} <-- message duplicated").blue());
                 }
                 MessageCorrupted {
                     msg,
@@ -354,8 +346,7 @@ pub trait Strategy {
                     ..
                 } => {
                     t!(format!(
-                        "{:>10} | {:>10} -x- {:<10} {:?} ~~> {:?} <-- message corrupted",
-                        depth, src, dst, msg, corrupted_msg
+                        "{depth:>10} | {src:>10} -x- {dst:<10} {msg:?} ~~> {corrupted_msg:?} <-- message corrupted"
                     )
                     .blue());
                 }

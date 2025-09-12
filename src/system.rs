@@ -84,8 +84,7 @@ impl System {
         let node_id = self.sim.add_handler(name, node.clone());
         assert!(
             self.nodes.insert(name.to_string(), node).is_none(),
-            "Node with name {} already exists, node names must be unique",
-            name
+            "Node with name {name} already exists, node names must be unique"
         );
         self.net.borrow_mut().add_node(name.to_string(), node_id);
         self.logger.borrow_mut().log(LogEntry::NodeStarted {
@@ -198,8 +197,7 @@ impl System {
             self.proc_nodes
                 .insert(name.to_string(), self.nodes[node].clone())
                 .is_none(),
-            "Process with name {} already exists, process names must be unique",
-            name
+            "Process with name {name} already exists, process names must be unique"
         );
         self.logger.borrow_mut().log(LogEntry::ProcessStarted {
             time: self.sim.time(),

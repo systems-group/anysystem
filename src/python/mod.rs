@@ -47,7 +47,7 @@ impl PyProcessFactory {
     /// Creates a process instance with specified arguments and random seed.
     pub fn build(&self, args: impl IntoPy<Py<PyTuple>>, seed: u64) -> PyProcess {
         let proc = Python::with_gil(|py| -> PyObject {
-            py.run(format!("import random\nrandom.seed({})", seed).as_str(), None, None)
+            py.run(format!("import random\nrandom.seed({seed})").as_str(), None, None)
                 .unwrap();
             self.proc_class
                 .call1(py, args)

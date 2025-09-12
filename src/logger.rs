@@ -357,16 +357,16 @@ impl LogEntry {
                 .red());
             }
             LogEntry::NodeConnected { time, node } => {
-                t!(format!("{:>9.3} - connected node: {}", time, node).green());
+                t!(format!("{time:>9.3} - connected node: {node}").green());
             }
             LogEntry::NodeDisconnected { time, node } => {
-                t!(format!("{:>9.3} - disconnected node: {}", time, node).red());
+                t!(format!("{time:>9.3} - disconnected node: {node}").red());
             }
             LogEntry::NodeCrashed { time, node } => {
-                t!(format!("{:>9.3} - node crashed: {}", time, node).red());
+                t!(format!("{time:>9.3} - node crashed: {node}").red());
             }
             LogEntry::NodeRecovered { time, node } => {
-                t!(format!("{:>9.3} - node recovered: {}", time, node).green());
+                t!(format!("{time:>9.3} - node recovered: {node}").green());
             }
             LogEntry::TimerSet { .. } => {}
             LogEntry::TimerFired {
@@ -376,32 +376,32 @@ impl LogEntry {
                 node: _,
                 proc,
             } => {
-                t!(format!("{:>9.3} {:>10} !-- {:<10}", time, proc, timer_name).yellow());
+                t!(format!("{time:>9.3} {proc:>10} !-- {timer_name:<10}").yellow());
             }
             LogEntry::TimerCancelled { .. } => {}
             LogEntry::LinkDisabled { time, from, to } => {
-                t!(format!("{:>9.3} - disabled link: {:>10} --> {:<10}", time, from, to).red());
+                t!(format!("{time:>9.3} - disabled link: {from:>10} --> {to:<10}").red());
             }
             LogEntry::LinkEnabled { time, from, to } => {
-                t!(format!("{:>9.3} - enabled link: {:>10} --> {:<10}", time, from, to).green());
+                t!(format!("{time:>9.3} - enabled link: {from:>10} --> {to:<10}").green());
             }
             LogEntry::DropIncoming { time, node } => {
-                t!(format!("{:>9.3} - drop messages to {}", time, node).red());
+                t!(format!("{time:>9.3} - drop messages to {node}").red());
             }
             LogEntry::PassIncoming { time, node } => {
-                t!(format!("{:>9.3} - pass messages to {}", time, node).green());
+                t!(format!("{time:>9.3} - pass messages to {node}").green());
             }
             LogEntry::DropOutgoing { time, node } => {
-                t!(format!("{:>9.3} - drop messages from {}", time, node).red());
+                t!(format!("{time:>9.3} - drop messages from {node}").red());
             }
             LogEntry::PassOutgoing { time, node } => {
-                t!(format!("{:>9.3} - pass messages from {}", time, node).green());
+                t!(format!("{time:>9.3} - pass messages from {node}").green());
             }
             LogEntry::NetworkPartition { time, group1, group2 } => {
-                t!(format!("{:>9.3} - network partition: {:?} -x- {:?}", time, group1, group2).red());
+                t!(format!("{time:>9.3} - network partition: {group1:?} -x- {group2:?}").red());
             }
             LogEntry::NetworkReset { time } => {
-                t!(format!("{:>9.3} - network reset, all problems healed", time).green());
+                t!(format!("{time:>9.3} - network reset, all problems healed").green());
             }
             LogEntry::ProcessStateUpdated { .. } => {}
             LogEntry::McStarted { .. } => {
@@ -420,7 +420,7 @@ impl LogEntry {
                 t!("{:>10} <-- {:<10} {:?}", dst, src, msg);
             }
             LogEntry::McMessageDropped { msg, src, dst } => {
-                t!(format!("{:>10} --x {:<10} {:?} <-- message dropped", src, dst, msg).red());
+                t!(format!("{src:>10} --x {dst:<10} {msg:?} <-- message dropped").red());
             }
             LogEntry::McMessageCorrupted {
                 msg,
@@ -429,8 +429,7 @@ impl LogEntry {
                 dst,
             } => {
                 t!(format!(
-                    "{:>10} -x- {:<10} {:?} ~~> {:?} <-- message corrupted",
-                    src, dst, msg, corrupted_msg
+                    "{src:>10} -x- {dst:<10} {msg:?} ~~> {corrupted_msg:?} <-- message corrupted"
                 )
                 .blue());
             }
@@ -445,19 +444,19 @@ impl LogEntry {
                 t!(format!("{:>10} +++ {:<10} <-- timer set", proc, timer));
             }
             LogEntry::McTimerFired { proc, timer } => {
-                t!(format!("{:>10} !-- {:<10} <-- timer fired", proc, timer).yellow());
+                t!(format!("{proc:>10} !-- {timer:<10} <-- timer fired").yellow());
             }
             LogEntry::McTimerCancelled { proc, timer } => {
-                t!(format!("{:>10} xxx {:<10} <-- timer cancelled", proc, timer).yellow());
+                t!(format!("{proc:>10} xxx {timer:<10} <-- timer cancelled").yellow());
             }
             LogEntry::McNodeCrashed { node } => {
-                t!(format!("node crashed: {}", node).red());
+                t!(format!("node crashed: {node}").red());
             }
             LogEntry::McNetworkReset {} => {
                 t!("network reset, all problems healed".to_string().green());
             }
             LogEntry::McNetworkPartition { group1, group2 } => {
-                t!(format!("network partition: {:?} -x- {:?}", group1, group2).red());
+                t!(format!("network partition: {group1:?} -x- {group2:?}").red());
             }
         }
     }
