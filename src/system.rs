@@ -207,8 +207,25 @@ impl System {
     }
 
     /// Returns the names of all processes in the system.
+    /// First come numeric names in ascending order, then non-numeric names in lexicographical order.
     pub fn process_names(&self) -> Vec<String> {
-        self.proc_nodes.keys().cloned().collect()
+        let mut numeric_names: Vec<(i64, String)> = Vec::new();
+        let mut nonnumeric_names: Vec<String> = Vec::new();
+
+        for name in self.proc_nodes.keys() {
+            if let Ok(num) = name.parse::<i64>() {
+                numeric_names.push((num, name.clone()));
+            } else {
+                nonnumeric_names.push(name.clone());
+            }
+        }
+        numeric_names.sort_by_key(|&(num, _)| num);
+        nonnumeric_names.sort();
+        numeric_names
+            .into_iter()
+            .map(|(_, name)| name)
+            .chain(nonnumeric_names)
+            .collect()
     }
 
     /// Sends a local message to the process.
