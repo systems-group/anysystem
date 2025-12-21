@@ -26,6 +26,12 @@ class Message:
     def remove(self, key: str):
         self._data.pop(key, None)
 
+    def get(self, key: str, default: Any = None) -> Any:
+        return self._data.get(key, default)
+
+    def __contains__(self, key: str) -> bool:
+        return key in self._data
+
     @staticmethod
     def from_json(message_type: str, json_str: str) -> Message:
         return Message(message_type, json.loads(json_str))
