@@ -16,6 +16,7 @@ simcore = "0.1"
 colored = "2"
 downcast-rs = "1.2"
 dyn-clone = "1"
+indexmap = "2.12"
 lazy_static = "1.5"
 log = "0.4"
 ordered-float = { version = "4.2", features = ["serde"] }
