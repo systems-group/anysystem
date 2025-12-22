@@ -5,7 +5,6 @@ use std::fs;
 use std::rc::Rc;
 
 use colored::Colorize;
-use cstr::cstr;
 use pyo3::call::PyCallArgs;
 use pyo3::prelude::*;
 use pyo3::types::{PyModule, PyString};
@@ -224,7 +223,7 @@ impl Clone for PyProcess {
 fn get_size_fun(py: Python) -> Py<PyAny> {
     PyModule::from_code(
         py,
-        cstr!("
+        c"
 # Adapted from https://github.com/bosswissam/pysize
 import sys
 import inspect
@@ -256,9 +255,9 @@ def get_size(obj, seen=None):
             raise Exception(\"Unable to get size of %r. This may lead to incorrect sizes. Please report this error.\", obj)
     if hasattr(obj, '__slots__'): # can have __slots__ with __dict__
         size += sum(get_size(getattr(obj, s), seen) for s in obj.__slots__ if hasattr(obj, s))
-    return size"),
-        cstr!(""),
-        cstr!(""),
+    return size",
+        c"",
+        c"",
     )
     .unwrap()
     .getattr("get_size")
