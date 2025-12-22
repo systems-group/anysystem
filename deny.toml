@@ -13,7 +13,7 @@ allow = [
 ]
 confidence-threshold = 0.8
 exceptions = [
-    { allow = ["Unicode-DFS-2016"], crate = "unicode-ident" },
+    { allow = ["Unicode-3.0"], crate = "unicode-ident" },
     { allow = ["MPL-2.0"], crate = "colored" },
     { allow = ["Apache-2.0 WITH LLVM-exception"], crate = "target-lexicon" }
 ]
