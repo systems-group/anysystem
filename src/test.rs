@@ -1,6 +1,6 @@
 //! Testing facilities.
 
-use std::collections::BTreeMap;
+use indexmap::IndexMap;
 
 /// A test result.
 pub type TestResult = Result<bool, String>;
@@ -35,10 +35,10 @@ impl<T> TestSuite<T> {
     ///
     /// Collects and prints the result of each test, and prints the summary in the end.  
     /// Returns whether all tests are passed and results for each test.
-    pub fn run(&mut self) -> (bool, BTreeMap<String, TestResult>) {
+    pub fn run(&mut self) -> (bool, IndexMap<String, TestResult>) {
         let total_count = self.tests.len();
         let mut passed_count = 0;
-        let mut test_results = BTreeMap::new();
+        let mut test_results = IndexMap::new();
         for test in &self.tests {
             println!("\n--- {} ---\n", test.name);
             let result = (test.func)(&test.config);
