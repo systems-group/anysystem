@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use std::path::Path;
 use std::rc::Rc;
 
+use indexmap::IndexMap;
 use rand::distributions::uniform::{SampleRange, SampleUniform};
 
 use simcore::handler::EventCancellationPolicy;
@@ -19,7 +20,7 @@ pub struct System {
     sim: Simulation,
     net: Rc<RefCell<Network>>,
     nodes: HashMap<String, Rc<RefCell<Node>>>,
-    proc_nodes: HashMap<String, Rc<RefCell<Node>>>,
+    proc_nodes: IndexMap<String, Rc<RefCell<Node>>>,
     logger: Rc<RefCell<Logger>>,
 }
 
@@ -33,7 +34,7 @@ impl System {
             sim,
             net,
             nodes: HashMap::new(),
-            proc_nodes: HashMap::new(),
+            proc_nodes: IndexMap::new(),
             logger,
         }
     }
@@ -47,7 +48,7 @@ impl System {
             sim,
             net,
             nodes: HashMap::new(),
-            proc_nodes: HashMap::new(),
+            proc_nodes: IndexMap::new(),
             logger,
         }
     }
@@ -206,7 +207,7 @@ impl System {
         });
     }
 
-    /// Returns the names of all processes in the system.
+    /// Returns the names of all processes in the system in the order they were added.
     pub fn process_names(&self) -> Vec<String> {
         self.proc_nodes.keys().cloned().collect()
     }
