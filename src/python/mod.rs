@@ -5,6 +5,7 @@ use std::fs;
 use std::rc::Rc;
 
 use colored::Colorize;
+use cstr::cstr;
 use pyo3::call::PyCallArgs;
 use pyo3::prelude::*;
 use pyo3::types::{PyModule, PyString};
@@ -50,8 +51,8 @@ impl PyProcessFactory {
     /// Creates a process instance with specified arguments and random seed.
     pub fn build(&self, args: impl for<'py> PyCallArgs<'py>, seed: u64) -> PyProcess {
         let proc = Python::attach(|py| -> Py<PyAny> {
-            let code = CString::new(format!("import random\nrandom.seed({seed})")).unwrap();
-            py.run(&code, None, None).unwrap();
+            let seed_init = CString::new(format!("import random\nrandom.seed({seed})")).unwrap();
+            py.run(&seed_init, None, None).unwrap();
             self.proc_class
                 .call1(py, args)
                 .map_err(|e| {
@@ -223,7 +224,7 @@ impl Clone for PyProcess {
 fn get_size_fun(py: Python) -> Py<PyAny> {
     PyModule::from_code(
         py,
-        &CString::new("
+        cstr!("
 # Adapted from https://github.com/bosswissam/pysize
 import sys
 import inspect
@@ -255,9 +256,9 @@ def get_size(obj, seen=None):
             raise Exception(\"Unable to get size of %r. This may lead to incorrect sizes. Please report this error.\", obj)
     if hasattr(obj, '__slots__'): # can have __slots__ with __dict__
         size += sum(get_size(getattr(obj, s), seen) for s in obj.__slots__ if hasattr(obj, s))
-    return size").unwrap(),
-        &CString::new("").unwrap(),
-        &CString::new("").unwrap(),
+    return size"),
+        cstr!(""),
+        cstr!(""),
     )
     .unwrap()
     .getattr("get_size")
