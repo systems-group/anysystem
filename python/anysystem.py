@@ -107,7 +107,7 @@ class Context(object):
         return self._time
 
 
-class Process:
+class Process(abc.ABC):
     @abc.abstractmethod
     def on_local_message(self, msg: Message, ctx: Context):
         """
