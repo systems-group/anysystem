@@ -21,7 +21,6 @@ class PingClient(Process):
 
     def on_timer(self, timer_name: str, ctx: Context):
         # process fired timers
-        print(timer_name)
         pass
 
 
