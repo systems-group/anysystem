@@ -109,6 +109,12 @@ class Context(object):
 
 class Process:
     @abc.abstractmethod
+    def on_start(self, ctx: Context):
+        """
+        This method is called after the process instance is created.
+        """
+
+    @abc.abstractmethod
     def on_local_message(self, msg: Message, ctx: Context):
         """
         This method is called when a _local_ message is received.

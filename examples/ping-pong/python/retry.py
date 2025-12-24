@@ -7,6 +7,9 @@ class PingClient(Process):
         self._server_id = server_id
         self._ping = None
 
+    def on_start(self, ctx: Context):
+        pass
+
     def on_local_message(self, msg: Message, ctx: Context):
         # process messages from the local user
         if msg.type == 'PING':
@@ -31,6 +34,9 @@ class PingClient(Process):
 class PingServer(Process):
     def __init__(self, proc_id: str):
         self._id = proc_id
+
+    def on_start(self, ctx: Context):
+        pass
 
     def on_local_message(self, msg: Message, ctx: Context):
         # process messages from the local user (not used in this example)

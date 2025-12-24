@@ -205,6 +205,9 @@ impl System {
             node: node.to_string(),
             proc: name.to_string(),
         });
+
+        let mut node = self.proc_nodes[name].borrow_mut();
+        node.start(name.to_string());
     }
 
     /// Returns the names of all processes in the system in the order they were added.

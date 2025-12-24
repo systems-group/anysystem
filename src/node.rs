@@ -188,6 +188,22 @@ impl Node {
             .unwrap();
     }
 
+    /// Starts the process.
+    pub fn start(&mut self, proc: String) {
+        let time = self.ctx.borrow().time();
+
+        let proc_entry = self.processes.get_mut(&proc).unwrap();
+        let mut proc_ctx = Context::from_simulation(proc.clone(), self.ctx.clone(), self.clock_skew);
+
+        proc_entry
+            .proc_impl
+            .on_start(&mut proc_ctx)
+            .map_err(|e| self.handle_process_error(e, proc.clone()))
+            .unwrap();
+
+        self.handle_process_actions(proc, time, proc_ctx.actions());
+    }
+
     /// Sends a local message to the process.
     pub fn send_local_message(&mut self, proc: String, msg: Message) {
         self.on_local_message_received(proc, msg);
