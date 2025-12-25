@@ -103,8 +103,8 @@ impl System {
 
     /// Starts all processes.
     pub fn start_processes(&mut self) {
-        for proc in self.process_names() {
-            self.start_process(&proc);
+        for proc_name in self.process_names() {
+            self.start_process(&proc_name);
         }
     }
 
