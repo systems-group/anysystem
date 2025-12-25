@@ -95,11 +95,16 @@ impl System {
         });
     }
 
+    /// Starts the process.
+    pub fn start_process(&mut self, proc_name: &str) {
+        let mut node = self.proc_nodes[proc_name].borrow_mut();
+        node.start(proc_name.to_string());
+    }
+
     /// Starts all processes.
     pub fn start_processes(&mut self) {
         for proc in self.process_names() {
-            let mut node = self.proc_nodes[&proc].borrow_mut();
-            node.start(proc.to_string());
+            self.start_process(&proc);
         }
     }
 
