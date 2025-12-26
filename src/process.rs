@@ -12,7 +12,9 @@ use crate::{Context, Message};
 /// A trait for process implementations.
 pub trait Process: DynClone {
     /// Called after the process instance is created.
-    fn on_start(&mut self, ctx: &mut Context) -> Result<(), String>;
+    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
+        Ok(())
+    }
 
     /// Called when a message is received.
     fn on_message(&mut self, msg: Message, from: String, ctx: &mut Context) -> Result<(), String>;

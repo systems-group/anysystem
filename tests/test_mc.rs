@@ -35,10 +35,6 @@ impl PingMessageNode {
 }
 
 impl Process for PingMessageNode {
-    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
-        Ok(())
-    }
-
     fn on_message(&mut self, msg: Message, _from: String, ctx: &mut Context) -> Result<(), String> {
         ctx.send_local(msg);
         Ok(())
@@ -68,10 +64,6 @@ impl MiddleNode {
 }
 
 impl Process for MiddleNode {
-    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
-        Ok(())
-    }
-
     fn on_message(&mut self, msg: Message, _from: String, ctx: &mut Context) -> Result<(), String> {
         for peer in &self.peers {
             ctx.send(msg.clone(), peer.clone());
@@ -104,10 +96,6 @@ impl CollectorNode {
 }
 
 impl Process for CollectorNode {
-    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
-        Ok(())
-    }
-
     fn on_message(&mut self, _msg: Message, _from: String, ctx: &mut Context) -> Result<(), String> {
         self.cnt += 1;
         if self.cnt == 2 {
@@ -151,10 +139,6 @@ impl PostponedReceiverNode {
 }
 
 impl Process for PostponedReceiverNode {
-    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
-        Ok(())
-    }
-
     fn on_message(&mut self, msg: Message, _: String, ctx: &mut Context) -> Result<(), String> {
         if self.timer_fired {
             ctx.send_local(msg);
@@ -194,10 +178,6 @@ impl Process for PostponedReceiverNode {
 struct DumbReceiverNode {}
 
 impl Process for DumbReceiverNode {
-    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
-        Ok(())
-    }
-
     fn on_message(&mut self, msg: Message, _from: String, ctx: &mut Context) -> Result<(), String> {
         ctx.send_local(msg);
         Ok(())
@@ -230,10 +210,6 @@ impl SpammerNode {
 }
 
 impl Process for SpammerNode {
-    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
-        Ok(())
-    }
-
     fn on_message(&mut self, _msg: Message, _from: String, _ctx: &mut Context) -> Result<(), String> {
         Ok(())
     }
@@ -256,10 +232,6 @@ struct TimerNode {
 }
 
 impl Process for TimerNode {
-    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
-        Ok(())
-    }
-
     fn on_message(&mut self, _msg: Message, _from: String, ctx: &mut Context) -> Result<(), String> {
         if !self.timer_fired {
             ctx.cancel_timer("timer");
@@ -293,10 +265,6 @@ impl Process for TimerNode {
 struct TimerResettingNode {}
 
 impl Process for TimerResettingNode {
-    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
-        Ok(())
-    }
-
     fn on_message(&mut self, _msg: Message, _from: String, ctx: &mut Context) -> Result<(), String> {
         ctx.send_local(Message::json("MESSAGE", &ctx.time()));
         ctx.cancel_timer("timer");
