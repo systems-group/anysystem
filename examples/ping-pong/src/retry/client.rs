@@ -4,13 +4,15 @@ use anysystem::{Context, Message, Process, ProcessState};
 
 #[derive(Clone)]
 pub struct RetryPingClient {
+    _id: String,
     server: String,
     ping: Option<Message>,
 }
 
 impl RetryPingClient {
-    pub fn new(server: &str) -> Self {
+    pub fn new(id: &str, server: &str) -> Self {
         Self {
+            _id: id.to_string(),
             server: server.to_string(),
             ping: None,
         }
