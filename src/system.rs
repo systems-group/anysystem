@@ -212,7 +212,7 @@ impl System {
             proc: name.to_string(),
         });
 
-        self.start_process(&name);
+        self.start_process(name);
     }
 
     /// Returns the names of all processes in the system in the order they were added.
