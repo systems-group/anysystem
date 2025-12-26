@@ -120,7 +120,6 @@ fn build_system(config: &TestConfig) -> System {
     };
     sys.add_process("server", server, "server-node");
     sys.add_process("client", client, "client-node");
-    sys.start_processes();
     sys
 }
 

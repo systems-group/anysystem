@@ -101,13 +101,6 @@ impl System {
         node.start(proc_name.to_string());
     }
 
-    /// Starts all processes.
-    pub fn start_processes(&mut self) {
-        for proc_name in self.process_names() {
-            self.start_process(&proc_name);
-        }
-    }
-
     /// Sets local clock skew of the node.
     pub fn set_node_clock_skew(&mut self, node: &str, clock_skew: f64) {
         self.nodes[node].borrow_mut().set_clock_skew(clock_skew);
@@ -218,6 +211,8 @@ impl System {
             node: node.to_string(),
             proc: name.to_string(),
         });
+
+        self.start_process(&name);
     }
 
     /// Returns the names of all processes in the system in the order they were added.
