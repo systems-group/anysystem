@@ -1,5 +1,5 @@
 from __future__ import annotations
-import abc
+from abc import ABC, abstractmethod
 import json
 import pickle
 from typing import Any, Dict, List, Tuple, Union
@@ -107,26 +107,25 @@ class Context(object):
         return self._time
 
 
-class Process:
-    @abc.abstractmethod
+class Process(ABC):
+    @abstractmethod
     def on_start(self, ctx: Context):
         """
         This method is called when the process is started on a node.
         """
 
-    @abc.abstractmethod
     def on_local_message(self, msg: Message, ctx: Context):
         """
         This method is called when a _local_ message is received.
         """
 
-    @abc.abstractmethod
+    @abstractmethod
     def on_message(self, msg: Message, sender: str, ctx: Context):
         """
         This method is called when a message is received.
         """
 
-    @abc.abstractmethod
+    @abstractmethod
     def on_timer(self, timer_name: str, ctx: Context):
         """
         This method is called when a timer fires.

@@ -108,8 +108,14 @@ fn build_system(config: &TestConfig) -> System {
     sys.add_node("server-node");
     sys.add_node("client-node");
     let (server, client): (Box<dyn Process>, Box<dyn Process>) = match config.impl_path.as_str() {
-        "basic" => (boxed!(BasicPingServer {}), boxed!(BasicPingClient::new("server"))),
-        "retry" => (boxed!(RetryPingServer {}), boxed!(RetryPingClient::new("server"))),
+        "basic" => (
+            boxed!(BasicPingServer::new("server")),
+            boxed!(BasicPingClient::new("client", "server")),
+        ),
+        "retry" => (
+            boxed!(RetryPingServer::new("server")),
+            boxed!(RetryPingClient::new("client", "server")),
+        ),
         _ => {
             let server_f = PyProcessFactory::new(&config.impl_path, "PingServer");
             let server = server_f.build(("server",), config.seed);

@@ -1,7 +1,15 @@
 use anysystem::{Context, Message, Process};
 
 #[derive(Clone)]
-pub struct BasicPingServer {}
+pub struct BasicPingServer {
+    _id: String,
+}
+
+impl BasicPingServer {
+    pub fn new(id: &str) -> Self {
+        Self { _id: id.to_string() }
+    }
+}
 
 impl Process for BasicPingServer {
     fn on_message(&mut self, msg: Message, from: String, ctx: &mut Context) -> Result<(), String> {

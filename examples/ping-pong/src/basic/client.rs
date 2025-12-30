@@ -2,12 +2,14 @@ use anysystem::{Context, Message, Process};
 
 #[derive(Clone)]
 pub struct BasicPingClient {
+    _id: String,
     server: String,
 }
 
 impl BasicPingClient {
-    pub fn new(server: &str) -> Self {
+    pub fn new(id: &str, server: &str) -> Self {
         Self {
+            _id: id.to_string(),
             server: server.to_string(),
         }
     }
