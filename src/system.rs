@@ -13,7 +13,7 @@ use simcore::{cast, Simulation};
 
 use crate::events::MessageReceived;
 use crate::logger::{LogEntry, Logger};
-use crate::{EventLogEntry, Message, Network, Node, Process};
+use crate::{Context, EventLogEntry, Message, Network, Node, Process};
 
 /// Models distributed system consisting of multiple nodes connected via network.
 pub struct System {
@@ -190,7 +190,6 @@ impl System {
     ///
     /// Note that process names should be globally unique.
     pub fn add_process(&mut self, name: &str, proc: Box<dyn Process>, node: &str) {
-        self.nodes[node].borrow_mut().add_process(name, proc);
         self.net
             .borrow_mut()
             .set_proc_location(name.to_string(), node.to_string());
@@ -200,11 +199,23 @@ impl System {
                 .is_none(),
             "Process with name {name} already exists, process names must be unique"
         );
+        self.nodes[node].borrow_mut().add_process(name, proc);
         self.logger.borrow_mut().log(LogEntry::ProcessStarted {
             time: self.sim.time(),
             node: node.to_string(),
             proc: name.to_string(),
         });
+
+        let node = &mut *self.proc_nodes[name].borrow_mut();
+        let time = node.ctx.borrow().time();
+        let proc_entry = node.processes.get_mut(name).unwrap();
+        let mut proc_ctx = Context::from_simulation(name.to_string(), node.ctx.clone(), node.clock_skew);
+        proc_entry
+            .proc_impl
+            .on_start(&mut proc_ctx)
+            .map_err(|e| node.handle_process_error(e, name.to_string()))
+            .unwrap();
+        node.handle_process_actions(name.to_string(), time, proc_ctx.actions());
     }
 
     /// Returns the names of all processes in the system in the order they were added.
