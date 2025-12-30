@@ -70,7 +70,8 @@ pub enum ProcessEvent {
 }
 
 #[derive(Clone)]
-pub(crate) struct ProcessEntry {
+/// Represents the internal state and metadata of a node's process.
+pub struct ProcessEntry {
     pub(crate) proc_impl: Box<dyn Process>,
     pub(crate) event_log: Vec<EventLogEntry>,
     pub(crate) local_outbox: Vec<Message>,
@@ -81,6 +82,7 @@ pub(crate) struct ProcessEntry {
 }
 
 impl ProcessEntry {
+    /// Creates a new `ProcessEntry` with the given process implementation and initializes all fields to their default empty states.
     pub fn new(proc_impl: Box<dyn Process>) -> Self {
         Self {
             proc_impl,
@@ -100,11 +102,14 @@ pub struct Node {
     pub id: Id,
     /// Unique node name.
     pub name: String,
-    processes: HashMap<String, ProcessEntry>,
+    /// Mapping from process names to their corresponding process entries.
+    pub processes: HashMap<String, ProcessEntry>,
     net: Rc<RefCell<Network>>,
-    clock_skew: f64,
+    /// Difference between the node's clock and the simulation clock (in seconds).
+    pub clock_skew: f64,
     is_crashed: bool,
-    ctx: Rc<RefCell<SimulationContext>>,
+    /// Reference to the simulation context the node belongs to.
+    pub ctx: Rc<RefCell<SimulationContext>>,
     logger: Rc<RefCell<Logger>>,
     local_message_count: u64,
 }
@@ -191,10 +196,8 @@ impl Node {
     /// Starts the process.
     pub fn start(&mut self, proc: String) {
         let time = self.ctx.borrow().time();
-
         let proc_entry = self.processes.get_mut(&proc).unwrap();
         let mut proc_ctx = Context::from_simulation(proc.clone(), self.ctx.clone(), self.clock_skew);
-
         proc_entry
             .proc_impl
             .on_start(&mut proc_ctx)
@@ -338,7 +341,8 @@ impl Node {
         self.handle_process_actions(proc, time, proc_ctx.actions());
     }
 
-    fn handle_process_actions(&mut self, proc: String, time: f64, actions: Vec<ProcessEvent>) {
+    /// Processes a sequence of actions for a given process.
+    pub fn handle_process_actions(&mut self, proc: String, time: f64, actions: Vec<ProcessEvent>) {
         for action in actions {
             let proc_entry = self.processes.get_mut(&proc).unwrap();
             proc_entry.event_log.push(EventLogEntry::new(time, action.clone()));
@@ -430,7 +434,8 @@ impl Node {
         }
     }
 
-    fn handle_process_error(&self, err: String, proc: String) -> &str {
+    /// Logs a process error and returns a descriptive message.
+    pub fn handle_process_error(&self, err: String, proc: String) -> &str {
         eprintln!(
             "{}",
             format!(
