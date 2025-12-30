@@ -114,6 +114,7 @@ class Process(ABC):
         This method is called when the process is started on a node.
         """
 
+    @abstractmethod
     def on_local_message(self, msg: Message, ctx: Context):
         """
         This method is called when a _local_ message is received.
