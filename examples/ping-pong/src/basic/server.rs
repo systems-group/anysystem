@@ -4,10 +4,6 @@ use anysystem::{Context, Message, Process};
 pub struct BasicPingServer {}
 
 impl Process for BasicPingServer {
-    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
-        Ok(())
-    }
-
     fn on_message(&mut self, msg: Message, from: String, ctx: &mut Context) -> Result<(), String> {
         if msg.tip == "PING" {
             let resp = Message::new("PONG".to_string(), msg.data);

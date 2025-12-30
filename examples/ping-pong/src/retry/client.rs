@@ -18,10 +18,6 @@ impl RetryPingClient {
 }
 
 impl Process for RetryPingClient {
-    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
-        Ok(())
-    }
-
     fn on_message(&mut self, msg: Message, _from: String, ctx: &mut Context) -> Result<(), String> {
         if msg.tip == "PONG" {
             self.ping = None;

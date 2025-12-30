@@ -14,10 +14,6 @@ impl BasicPingClient {
 }
 
 impl Process for BasicPingClient {
-    fn on_start(&mut self, _ctx: &mut Context) -> Result<(), String> {
-        Ok(())
-    }
-
     fn on_message(&mut self, msg: Message, _from: String, ctx: &mut Context) -> Result<(), String> {
         if msg.tip == "PONG" {
             ctx.send_local(msg);
