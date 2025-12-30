@@ -12,6 +12,9 @@ class TestProcess(Process):
         self.inner_member = DataClass()
         self.tmp_value = None
 
+    def on_start(self, ctx: Context):
+        pass
+
     def on_local_message(self, msg: Message, ctx: Context):
         assert type(self.data) == list
         assert type(self.data[0]) == str
