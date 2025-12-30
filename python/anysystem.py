@@ -111,7 +111,7 @@ class Process:
     @abc.abstractmethod
     def on_start(self, ctx: Context):
         """
-        This method is called after the process instance is created.
+        This method is called when the process is started on a node.
         """
 
     @abc.abstractmethod
