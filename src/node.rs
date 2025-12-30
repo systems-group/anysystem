@@ -70,7 +70,7 @@ pub enum ProcessEvent {
 }
 
 #[derive(Clone)]
-/// Represents the internal state and metadata of a node's process.
+/// Represents the internal state and metadata of a process.
 pub struct ProcessEntry {
     pub(crate) proc_impl: Box<dyn Process>,
     pub(crate) event_log: Vec<EventLogEntry>,
@@ -191,20 +191,6 @@ impl Node {
             .set_state(state)
             .map_err(|e| self.handle_process_error(e, proc.to_string()))
             .unwrap();
-    }
-
-    /// Starts the process.
-    pub fn start(&mut self, proc: String) {
-        let time = self.ctx.borrow().time();
-        let proc_entry = self.processes.get_mut(&proc).unwrap();
-        let mut proc_ctx = Context::from_simulation(proc.clone(), self.ctx.clone(), self.clock_skew);
-        proc_entry
-            .proc_impl
-            .on_start(&mut proc_ctx)
-            .map_err(|e| self.handle_process_error(e, proc.clone()))
-            .unwrap();
-
-        self.handle_process_actions(proc, time, proc_ctx.actions());
     }
 
     /// Sends a local message to the process.
