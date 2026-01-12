@@ -135,6 +135,18 @@ impl PyProcess {
 }
 
 impl Process for PyProcess {
+    fn on_start(&mut self, ctx: &mut Context) -> Result<(), String> {
+        Python::attach(|py| {
+            let py_ctx = self.ctx_class.call1(py, (ctx.time(),)).unwrap();
+            self.proc
+                .call_method1(py, "on_start", (&py_ctx,))
+                .map_err(|e| error_to_string(e, py))?;
+            PyProcess::handle_proc_actions(ctx, &py_ctx, py);
+            self.update_max_size(py, false);
+            Ok(())
+        })
+    }
+
     fn on_message(&mut self, msg: Message, from: String, ctx: &mut Context) -> Result<(), String> {
         Python::attach(|py| {
             let py_msg = self

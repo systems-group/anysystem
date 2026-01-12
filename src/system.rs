@@ -190,7 +190,6 @@ impl System {
     ///
     /// Note that process names should be globally unique.
     pub fn add_process(&mut self, name: &str, proc: Box<dyn Process>, node: &str) {
-        self.nodes[node].borrow_mut().add_process(name, proc);
         self.net
             .borrow_mut()
             .set_proc_location(name.to_string(), node.to_string());
@@ -200,6 +199,7 @@ impl System {
                 .is_none(),
             "Process with name {name} already exists, process names must be unique"
         );
+        self.nodes[node].borrow_mut().add_process(name, proc);
         self.logger.borrow_mut().log(LogEntry::ProcessStarted {
             time: self.sim.time(),
             node: node.to_string(),
