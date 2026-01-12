@@ -170,6 +170,17 @@ impl Node {
     /// Spawns new process on the node.
     pub fn add_process(&mut self, name: &str, proc: Box<dyn Process>) {
         self.processes.insert(name.to_string(), ProcessEntry::new(proc));
+
+        // Call proc.on_start() and handle process actions
+        let proc_entry = self.processes.get_mut(name).unwrap();
+        let mut proc_ctx = Context::from_simulation(name.to_string(), self.ctx.clone(), self.clock_skew);
+        proc_entry
+            .proc_impl
+            .on_start(&mut proc_ctx)
+            .map_err(|e| self.handle_process_error(e, name.to_string()))
+            .unwrap();
+        let time = self.ctx.borrow().time();
+        self.handle_process_actions(name.to_string(), time, proc_ctx.actions());
     }
 
     /// Returns a local process by its name.

@@ -13,7 +13,7 @@ use simcore::{cast, Simulation};
 
 use crate::events::MessageReceived;
 use crate::logger::{LogEntry, Logger};
-use crate::{Context, EventLogEntry, Message, Network, Node, Process};
+use crate::{EventLogEntry, Message, Network, Node, Process};
 
 /// Models distributed system consisting of multiple nodes connected via network.
 pub struct System {
@@ -205,17 +205,6 @@ impl System {
             node: node.to_string(),
             proc: name.to_string(),
         });
-
-        let node = &mut *self.proc_nodes[name].borrow_mut();
-        let time = node.ctx.borrow().time();
-        let proc_entry = node.processes.get_mut(name).unwrap();
-        let mut proc_ctx = Context::from_simulation(name.to_string(), node.ctx.clone(), node.clock_skew);
-        proc_entry
-            .proc_impl
-            .on_start(&mut proc_ctx)
-            .map_err(|e| node.handle_process_error(e, name.to_string()))
-            .unwrap();
-        node.handle_process_actions(name.to_string(), time, proc_ctx.actions());
     }
 
     /// Returns the names of all processes in the system in the order they were added.
